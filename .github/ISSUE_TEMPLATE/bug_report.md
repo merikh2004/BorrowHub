@@ -1,11 +1,16 @@
 ---
 name: Bug Report
-about: Create a report to help us improve BorrowHub
+about: Create a report to help us improve BorrowHub (Mobile or Backend)
 title: '[BUG] '
 labels: bug
 assignees: ''
 
 ---
+
+## Component
+- [ ] mobile-app (Android)
+- [ ] backend-api (Laravel)
+- [ ] Shared/API Interface
 
 ## Bug Description
 A clear and concise description of what the bug is.
@@ -22,13 +27,13 @@ A clear and concise description of what you expected to happen.
 ## Actual Behavior
 A clear and concise description of what actually happened.
 
+## Environment Details (if applicable)
+- **Mobile:** [Android Version, Device/Emulator Model, App Version]
+- **Backend:** [PHP Version, Laravel Version, Server Environment]
+- **Database:** [Local Room DB or Remote MySQL]
+
 ## Screenshots (if applicable)
 If applicable, add screenshots to help explain your problem.
 
-## Environment Details
-- **Android Version:** [e.g. 11.0]
-- **Device/Emulator:** [e.g. Pixel 4 Emulator]
-- **App Version:** [e.g. 1.0.0]
-
 ## Additional Context
-Add any other context about the problem here (e.g., related to the Room database or specific UI component).
+Add any other context about the problem here.

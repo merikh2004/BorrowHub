@@ -1,61 +1,36 @@
-# BorrowHub
+# BorrowHub Project Guide (Monorepo)
 
-## Project Overview
-BorrowHub is a mobile-based Borrowing Management System built for university use. It is designed to help University MIS and CSD Staff efficiently manage and monitor borrowing transactions within the Computer Studies Department. It tracks item status, return dates, and borrower records while offering role-based access for different staff members.
+This is the central guide for the **BorrowHub** project. This repository is structured as a **monorepo**, containing both the Android mobile application and the Laravel backend API.
 
-**Main Technologies:**
-- **Platform:** Android (Mobile)
-- **Language:** Java
-- **Database:** Room (SQLite)
-- **UI Framework:** XML Layouts with View Binding
-- **Jetpack Components:** ViewModel, LiveData, Room, Navigation
+## Repository Structure
 
-**Architecture:**
-BorrowHub strictly follows the **MVVM (Model-View-ViewModel)** architectural pattern combined with a **Repository pattern**.
-- **Entity/Model Layer:** Room Entities act as the Domain Model, simplifying data flow.
-- **DAO Layer:** Interfaces defining database operations, called only by the Repository.
-- **Repository Layer:** Single source of truth. Calls DAO and returns `LiveData<Entity>` directly to the ViewModel.
-- **ViewModel Layer:** Holds `LiveData` for UI state and contains presentation logic. No context or DB access.
-- **View Layer (Activity/Fragment):** Observes `LiveData` from the ViewModel and renders UI. No business logic or direct data access.
+- **`mobile-app/`**: Android application (Java, MVVM, Room).
+  - Use `mobile-app/GEMINI.md` for specific app guidance.
+  - Architecture: `mobile-app/docs/ARCHITECTURE.md`.
+- **`backend-api/`**: Laravel Backend API (PHP, MySQL, Service-Repository Pattern).
+  - Architecture: `backend-api/docs/ARCHITECTURE.md`.
+- **`docs/`**: Shared documentation.
+  - Contribution guidelines: `docs/CONTRIBUTING.md`.
+- **`.github/`**: Repository-wide Issue and PR templates.
 
-## Building and Running
-The project is built using Gradle. Typical tasks can be executed via the command line or Android Studio:
+## Architectural Context
 
-- **Build the project:** `./gradlew assembleDebug`
-- **Clean the project:** `./gradlew clean`
-- **Run Unit Tests:** `./gradlew test`
-- **Run Instrumentation Tests:** `./gradlew connectedAndroidTest`
+BorrowHub follows a **Network-First (with Local Caching)** approach:
+1.  **Mobile App:** Uses **Retrofit** to communicate with the Laravel API.
+2.  **Local Storage:** Uses **Room** in the Android app as a cache for offline support.
+3.  **Backend:** Laravel manages central data persistence in **MySQL** and handles authentication/authorization.
 
-*To run the application, it is recommended to use Android Studio to build and deploy to a connected Android device or emulator.*
+## Instructions for Gemini CLI
 
-## Development Conventions
+- **Working on Mobile:** Focus on the `mobile-app/` directory. Ensure the `Repository` and `ApiService` layers match the backend definitions.
+- **Working on Backend:** Focus on the `backend-api/` directory. Adhere strictly to the **Service-Repository Pattern** (do not write business logic or DB queries in controllers). Always use Form Requests for validation and API Resources for JSON responses.
+- **Cross-Project Changes:** When adding a new feature (e.g., "Add Item"), implement the API endpoint first, then the mobile integration.
 
-**Coding Standards:**
-- Keep functions short and focused (single responsibility).
-- Avoid hardcoded strings; use `strings.xml`.
-- **Naming Conventions:**
-  - Classes: `PascalCase` (e.g., `BorrowViewModel`)
-  - Functions / Variables: `camelCase` (e.g., `fetchBorrowRecords()`)
-  - Constants: `UPPER_SNAKE_CASE` (e.g., `MAX_BORROW_DAYS`)
-  - XML Layout Files: `snake_case` (e.g., `fragment_borrow_list.xml`)
-  - XML IDs: `snake_case` using specific prefixes based on the view type:
-    - `tv_` (TextView)
-    - `btn_` (Button)
-    - `et_` (EditText)
-    - `rv_` (RecyclerView)
-    - `iv_` (ImageView)
-    - `pb_` (ProgressBar)
+## Development Workflow
 
-**Architecture Rules:**
-1. The View must never touch a DAO directly.
-2. The ViewModel must never touch a DAO directly.
-3. DAOs return Entities.
-4. Entities are passed up to the View for rendering.
+1.  **Issue Creation:** Use the templates in `.github/ISSUE_TEMPLATE/`.
+2.  **Pull Requests:** Use the template in `.github/PULL_REQUEST_TEMPLATE.md`.
+3.  **Code Standards:** Refer to `docs/CONTRIBUTING.md` for shared coding conventions.
 
-**Branching & Commit Strategy:**
-- **Branching:** `feature/<short-description>`, `fix/<short-description>`, `improve/<short-description>`, `hotfix/<short-description>`. Branch off from `master`.
-- **Commits:** Follow conventional commits format: `<type>: <short summary>`.
-  - Types include: `feat`, `fix`, `refactor`, `style`, `docs`, `test`, `chore`.
-
-**Pull Requests:**
-Ensure the project builds without errors before opening a PR. Use the provided Pull Request Template (`docs/PR_TEMPLATE.md`) and request a review before merging.
+---
+*BorrowHub — Making asset management simple and efficient.*

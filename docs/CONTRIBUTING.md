@@ -23,6 +23,11 @@ Thank you for your interest in contributing to **BorrowHub**. This document outl
     - [ViewModel](#viewmodel)
     - [Repository](#repository)
     - [Entity](#entity)
+  - [Laravel Backend Architecture Guidelines](#laravel-backend-architecture-guidelines)
+    - [Controllers](#controllers)
+    - [Requests (`Form Requests`)](#requests-form-requests)
+    - [Services](#services)
+    - [Repositories](#repositories)
   - [Pull Request Process](#pull-request-process)
   - [Reporting Issues](#reporting-issues)
 
@@ -162,6 +167,30 @@ BorrowHub strictly follows the **MVVM (Model-View-ViewModel)** pattern. All cont
 - Also acts as a model.
 
 > Do not bypass the architecture by calling data sources directly from the View or ViewModel. Always route through the Repository.
+
+---
+
+## Laravel Backend Architecture Guidelines
+
+The Laravel API strictly follows the **Service-Repository Pattern** on top of MVC to maintain clean controllers and separated logic:
+
+### Controllers
+- Act only as traffic directors.
+- Do **not** contain any business logic or database queries (`Model::where()`).
+- Always return standard JSON responses via API Resources.
+
+### Requests (`Form Requests`)
+- Handle all input validation. Validation must not occur inside the Controller.
+
+### Services
+- Contain all business rules and domain logic.
+- Throw custom `Exceptions` if logic constraints fail.
+
+### Repositories
+- Act as the only layer that interacts with the database (Eloquent Models).
+- Keep queries isolated and easy to mock for testing.
+
+> Read the full backend architectural setup at [`backend-api/docs/ARCHITECTURE.md`](../backend-api/docs/ARCHITECTURE.md).
 
 ---
 

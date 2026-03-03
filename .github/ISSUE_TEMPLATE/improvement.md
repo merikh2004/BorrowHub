@@ -1,11 +1,16 @@
 ---
 name: Improvement/Refactor
-about: Propose a code improvement, refactor, or optimization
+about: Propose a code improvement, refactor, or optimization (Mobile or Backend)
 title: '[IMPROVE] '
 labels: refactor
 assignees: ''
 
 ---
+
+## Component
+- [ ] mobile-app (Android)
+- [ ] backend-api (Laravel)
+- [ ] Shared Architecture
 
 ## Improvement Description
 A clear and concise description of the code improvement or refactor.
@@ -14,16 +19,13 @@ A clear and concise description of the code improvement or refactor.
 Explain why this change is beneficial (e.g., performance, readability, scalability).
 
 ## Impact on Existing Code
-- **Affected Packages:** [e.g. data.local.dao, repository]
+- **Affected Packages/Namespaces:** [e.g. data.local.dao, repository, app/Http/Controllers]
 - **Potential Regressions:** What could break?
 
-## Database Flexibility (PostgreSQL/MySQL)
-- [ ] This refactor improves the abstraction between the database and the rest of the app to facilitate the move to PostgreSQL or MySQL.
-
-## Checklist
-- [ ] Refactor follows MVVM principles.
-- [ ] Refactor follows the project's Repository pattern.
-- [ ] Refactor prepares for the PostgreSQL/MySQL transition.
+## Architectural Checklist
+- [ ] Refactor follows MVVM principles (for mobile).
+- [ ] Refactor follows Laravel/MVC principles (for backend).
+- [ ] Refactor improves the abstraction between Mobile and Backend (API design).
 
 ## Additional Context
 Add any other context about the improvement here.
