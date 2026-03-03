@@ -24,15 +24,6 @@
 
 ---
 
-## Target Users
-
-| Role | Description |
-|---|---|
-| **Admin** | System administrators who oversee the borrowing system and manage overall records |
-| **CSD/MIS Staff** | Department staff who process borrow requests and manage CSD equipment |
-
----
-
 ## Tech Stack
 
 | Component | Technology |
@@ -48,99 +39,44 @@
 
 ## Architecture
 
-BorrowHub uses **MVVM** with a Repository pattern where the **Entity acts as the single Domain Model** across all layers to simplify data flow.
-
-```
-+--------------------------------------------------+
-|                      VIEW                        |
-|        (Activities / Fragments / XML)            |
-|   Observes LiveData . Sends user events          |
-+--------------------+-----------------------------+
-                     |  observes / calls
-+--------------------v-----------------------------+
-|                  VIEWMODEL                       |
-|     Holds UI state . Processes business logic    |
-|     Exposes LiveData . Survives config changes   |
-+--------------------+-----------------------------+
-                     |  requests data
-+--------------------v-----------------------------+
-|                 REPOSITORY                       |
-|     Single source of truth for data             |
-|     Returns LiveData<Entity> directly           |
-+--------------------+-----------------------------+
-                     |  queries
-+--------------------v-----------------------------+
-|              DATA LAYER (Room)                   |
-|   DAO interfaces . Entities . AppDatabase        |
-+--------------------------------------------------+
-```
-
-For the complete architecture breakdown including DAO design, data flow diagrams, package structure, and layer responsibilities, see [ARCHITECTURE.md](./docs/ARCHITECTURE.md).
+BorrowHub uses **MVVM** with a Repository pattern where the **Entity acts as the single Domain Model** across all layers to simplify data flow. For the complete architecture breakdown, see **[ARCHITECTURE.md](./docs/ARCHITECTURE.md)**.
 
 ---
 
-## Getting Started
+## Getting Started (Mobile)
+
+If you haven't cloned the repository yet, please follow the **[Root Getting Started Guide](../README.md#getting-started)** first.
 
 ### Prerequisites
 
 - Android Studio (latest stable version)
 - Android SDK (API Level 26 or higher)
 - Java Development Kit (JDK 11+)
-- Git
 
 ### Setup & Installation
 
-1. **Fork the repository**
-   - Fork the repository to your own GitHub account.
+1. **Open in Android Studio**
+   - Launch Android Studio.
+   - Select **Open an Existing Project**.
+   - Navigate to the `mobile-app/` folder within the cloned repository.
 
-2. **Clone your fork locally**:
-   ```bash
-    git clone https://github.com/your-username/BorrowHub.git
-    cd BorrowHub
-   ```
-3. Set the upstream remote:
-   ```bash
-    git remote add upstream https://github.com/original-repo-owner/BorrowHub.git
-   ```
+2. **Configure dependencies**
+   - Sync Gradle files when prompted.
+   - Ensure all required SDKs and build tools are installed.
 
-4. **Open in Android Studio**
-   - Launch Android Studio
-   - Select **Open an Existing Project**
-   - Navigate to the cloned folder
-
-5. **Configure dependencies**
-   - Sync Gradle files
-   - Ensure all required SDKs are installed
-
-6. **Run the application**
-   - Connect an Android device or start an emulator
-   - Click **Run** or press `Shift + F10`
+3. **Run the application**
+   - Connect an Android device or start an emulator.
+   - Click **Run** or press `Shift + F10`.
 
 > Make sure the project builds and runs successfully before making any changes.
 
 ---
 
-## User Roles & Permissions
-
-### Admin
-- Oversight of the entire borrowing system
-- Management of all system records and logs
-- Configuration of global application settings
-
-### CSD/MIS Staff
-- Process and approve borrow requests
-- Manage CSD equipment inventory and status
-- Monitor active borrowings and return dates
-- View and generate transaction reports
-
----
-
 ## Documentation
 
-- [ARCHITECTURE.md](./docs/ARCHITECTURE.md) — Full MVVM architecture guide, DAO breakdown, data flow diagrams, and layer responsibilities
+- [ARCHITECTURE.md](./docs/ARCHITECTURE.md) — Full MVVM architecture guide
 - [CONTRIBUTING.md](../docs/CONTRIBUTING.md) — Shared development workflow and coding standards
-- [PULL_REQUEST_TEMPLATE.md](../.github/PULL_REQUEST_TEMPLATE.md) — Standard template to be used when submitting Pull Requests
+- [PULL_REQUEST_TEMPLATE.md](../.github/PULL_REQUEST_TEMPLATE.md) — Standard PR template
 
 ---
-
-> *BorrowHub — Making asset management simple and efficient.*
+*BorrowHub — Making asset management simple and efficient.*
