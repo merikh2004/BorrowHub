@@ -33,6 +33,10 @@ The **backend-api** is the engine that powers the BorrowHub system. It manages d
     php artisan serve
     ```
 
+## API Versioning
+
+This backend API uses versioning. All API endpoints must be prefixed with `/api/v1/` (e.g., `/api/v1/login`, `/api/v1/items`). This structure ensures backwards compatibility for future mobile app updates.
+
 ## Documentation
 
 - **[ARCHITECTURE.md](./docs/ARCHITECTURE.md):** Overview of the API structure, the **Service-Repository Pattern**, database schema, and strict development standards. Ensure you read this before making any code changes.

@@ -67,7 +67,7 @@ routes/
 ## Key Components
 
 ### 1. Routes (`routes/api.php`)
-Defines the entry points for the mobile app (e.g., `/api/login`, `/api/items`, `/api/borrow`).
+Defines the entry points for the mobile app, ensuring API versioning is applied (e.g., `/api/v1/login`, `/api/v1/items`, `/api/v1/borrow`). Route groups should be used to manage versions efficiently.
 
 ### 2. Form Requests (`app/Http/Requests/`)
 Handles all input validation. If validation fails, it automatically returns a `422 Unprocessable Entity` response.

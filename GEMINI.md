@@ -23,8 +23,8 @@ BorrowHub follows a **Network-First (with Local Caching)** approach:
 ## Instructions for Gemini CLI
 
 - **Working on Mobile:** Focus on the `mobile-app/` directory. Ensure the `Repository` and `ApiService` layers match the backend definitions.
-- **Working on Backend:** Focus on the `backend-api/` directory. Adhere strictly to the **Service-Repository Pattern** (do not write business logic or DB queries in controllers). Always use Form Requests for validation and API Resources for JSON responses.
-- **Cross-Project Changes:** When adding a new feature (e.g., "Add Item"), implement the API endpoint first, then the mobile integration.
+- **Working on Backend:** Focus on the `backend-api/` directory. Adhere strictly to the **Service-Repository Pattern** (do not write business logic or DB queries in controllers). Always use Form Requests for validation and API Resources for JSON responses. Ensure API versioning is applied (e.g., prefixing routes with `/api/v1/`).
+- **Cross-Project Changes:** When adding a new feature (e.g., "Add Item"), implement the versioned API endpoint (e.g., `/api/v1/...`) first, then the mobile integration.
 - **Design Reference:** Refer to `borrowhub-prototype/` for UI/UX specifications when implementing mobile screens.
 
 ## Development Workflow
