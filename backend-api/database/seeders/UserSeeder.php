@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
             ['username' => 'admin'],
             [
                 'name' => 'System Administrator',
-                'password' => Hash::make('admin123'),
+                'password' => Hash::make(env('ADMIN_PASSWORD', 'admin123')),
                 'role' => 'admin',
             ]
         );
@@ -28,7 +28,7 @@ class UserSeeder extends Seeder
             ['username' => 'staff'],
             [
                 'name' => 'CSD Staff',
-                'password' => Hash::make('staff123'),
+                'password' => Hash::make(env('STAFF_PASSWORD', 'staff123')),
                 'role' => 'staff',
             ]
         );

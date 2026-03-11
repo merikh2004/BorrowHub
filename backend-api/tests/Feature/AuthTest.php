@@ -110,4 +110,22 @@ class AuthTest extends TestCase
 
         $this->assertEquals(0, $user->tokens()->count());
     }
+
+    /** @test */
+    public function login_attempts_are_rate_limited()
+    {
+        for ($i = 0; $i < 5; $i++) {
+            $this->postJson('/api/v1/login', [
+                'username' => 'testadmin',
+                'password' => 'wrong-password',
+            ]);
+        }
+
+        $response = $this->postJson('/api/v1/login', [
+            'username' => 'testadmin',
+            'password' => 'wrong-password',
+        ]);
+
+        $response->assertStatus(429);
+    }
 }

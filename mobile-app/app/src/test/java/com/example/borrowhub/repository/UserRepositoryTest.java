@@ -62,7 +62,7 @@ public class UserRepositoryTest {
         UserDTO userDto = new UserDTO();
         userDto.setId(1);
         userDto.setName("Test User");
-        userDto.setEmail("test@test.com");
+        userDto.setUsername("testuser");
         userDto.setRole("student");
         mockData.setUser(userDto);
         mockResponse.setData(mockData);
@@ -70,7 +70,7 @@ public class UserRepositoryTest {
         when(mockApiService.login(any(LoginRequestDTO.class))).thenReturn(mockCall);
 
         // Act
-        LiveData<Boolean> result = userRepository.login("test@test.com", "password");
+        LiveData<Boolean> result = userRepository.login("testuser", "password");
         result.observeForever(mockObserver);
 
         // Capture callback

@@ -8,13 +8,13 @@ public class User {
     @PrimaryKey
     private int id;
     private String name;
-    private String email;
+    private String username;
     private String role;
 
-    public User(int id, String name, String email, String role) {
+    public User(int id, String name, String username, String role) {
         this.id = id;
         this.name = name;
-        this.email = email;
+        this.username = username;
         this.role = role;
     }
 
@@ -34,12 +34,12 @@ public class User {
         this.name = name;
     }
 
-    public String getEmail() {
-        return email;
+    public String getUsername() {
+        return username;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getRole() {

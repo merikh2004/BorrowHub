@@ -30,14 +30,13 @@ class AuthController extends Controller
         try {
             $result = $this->authService->authenticate($request->validated());
 
-            return collect([
-                'status' => 'success',
-                'message' => 'User logged in successfully.',
-                'data' => [
+            return $this->successResponse(
+                [
                     'user' => new UserResource($result['user']),
                     'token' => $result['token'],
-                ]
-            ])->pipe(fn ($collection) => response()->json($collection->toArray(), 200));
+                ],
+                'User logged in successfully.'
+            );
         } catch (ValidationException $e) {
             return $this->errorResponse($e->getMessage(), 401, $e->errors());
         }

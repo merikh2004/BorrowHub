@@ -35,10 +35,10 @@ public class UserRepository {
         return userDao.getUser();
     }
 
-    public LiveData<Boolean> login(String email, String password) {
+    public LiveData<Boolean> login(String username, String password) {
         MutableLiveData<Boolean> loginResult = new MutableLiveData<>();
         
-        LoginRequestDTO request = new LoginRequestDTO(email, password);
+        LoginRequestDTO request = new LoginRequestDTO(username, password);
         apiService.login(request).enqueue(new Callback<LoginResponseDTO>() {
             @Override
             public void onResponse(Call<LoginResponseDTO> call, Response<LoginResponseDTO> response) {
@@ -48,7 +48,7 @@ public class UserRepository {
                     
                     UserDTO userDto = data.getUser();
                     if (userDto != null) {
-                        User user = new User(userDto.getId(), userDto.getName(), userDto.getEmail(), userDto.getRole());
+                        User user = new User(userDto.getId(), userDto.getName(), userDto.getUsername(), userDto.getRole());
                         executorService.execute(() -> userDao.insertUser(user));
                     }
                     loginResult.postValue(true);
