@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">BorrowHub</string>
+    <string name="login_title">BorrowHub</string>
+    <string name="login_subtitle">Management Information System</string>
+    <string name="username_label">Username</string>
+    <string name="username_hint">Enter your username (admin / staff)</string>
+    <string name="password_label">Password</string>
+    <string name="password_hint">Enter your password (123)</string>
+    <string name="sign_in_button">Sign In</string>
+    <string name="login_footer_text">Authorized personnel only</string>
+    <string name="login_copyright">© 2026 Computer Science Studies. All rights reserved.</string>
+    <string name="error_empty_fields">Username and password cannot be empty</string>
+    <string name="login_failed">Invalid Credentials: Username or password is incorrect.</string>
+    <string name="login_success">Login Successful</string>
 </resources>

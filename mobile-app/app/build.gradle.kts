@@ -16,6 +16,9 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        
+        // Local Development BASE_URL
+        buildConfigField("String", "BASE_URL", "\"http://127.0.0.1:8000/\"")
     }
 
     buildTypes {
@@ -25,14 +28,20 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            // Production/Release BASE_URL
+            buildConfigField("String", "BASE_URL", "\"https://127.0.0.1:8000/\"")
         }
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+    }
+    testOptions {
+        // Explicitly define mock behavior for all dependencies.
     }
 }
 

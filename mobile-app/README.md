@@ -69,6 +69,10 @@ If you haven't cloned the repository yet, please follow the **[Root Getting Star
 
 3. **Run the application**
    - Connect an Android device or start an emulator.
+   - If you are running the backend locally on port 8000, execute the following command in your terminal to allow the emulator or your physical device to access your local API:
+     ```bash
+     adb reverse tcp:8000 tcp:8000
+     ```
    - Click **Run** or press `Shift + F10`.
 
 > Make sure the project builds and runs successfully before making any changes.
@@ -79,6 +83,8 @@ If you haven't cloned the repository yet, please follow the **[Root Getting Star
 
 - [ARCHITECTURE.md](./docs/ARCHITECTURE.md) — Full MVVM architecture guide
 - [CONTRIBUTING.md](../docs/CONTRIBUTING.md) — Shared development workflow and coding standards
+- [ADB Commands Cheat Sheet](../docs/adb-commands.md) — Essential ADB commands for debugging and port forwarding
+- [Gradle Commands Cheat Sheet](../docs/gradle-commands.md) — Commands for building, cleaning, and testing the app
 - [PULL_REQUEST_TEMPLATE.md](../.github/PULL_REQUEST_TEMPLATE.md) — Standard PR template
 
 ---

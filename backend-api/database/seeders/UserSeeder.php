@@ -14,7 +14,7 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         // Default Admin Account
-        User::firstOrCreate(
+        User::updateOrCreate(
             ['username' => 'admin'],
             [
                 'name' => 'System Administrator',
@@ -24,7 +24,7 @@ class UserSeeder extends Seeder
         );
 
         // Default Staff Account
-        User::firstOrCreate(
+        User::updateOrCreate(
             ['username' => 'staff'],
             [
                 'name' => 'CSD Staff',
