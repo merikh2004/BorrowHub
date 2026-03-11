@@ -1,0 +1,53 @@
+name: Backend CI
+
+on:
+  push:
+    branches: [ "master" ]
+    paths:
+      - 'backend-api/**'
+  pull_request:
+    branches: [ "master" ]
+    paths:
+      - 'backend-api/**'
+
+jobs:
+  laravel-tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend-api
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+        extensions: mbstring, dom, fileinfo, mysql, sqlite3
+        coverage: none
+
+    - name: Install Dependencies
+      run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
+    - name: Prepare Environment
+      run: |
+        cp .env.example .env
+        php artisan key:generate
+
+    - name: Create Database
+      run: |
+        mkdir -p database
+        touch database/database.sqlite
+      # We use SQLite for CI tests by default in Laravel unless specifically configured to use a MySQL service container.
+
+    - name: Setup Database Config for Tests
+      run: |
+        sed -i 's/DB_CONNECTION=mysql/DB_CONNECTION=sqlite/' .env
+        sed -i 's/DB_DATABASE=borrowhub_db/DB_DATABASE=database\/database.sqlite/' .env
+
+    - name: Run Migrations
+      run: php artisan migrate --force
+
+    - name: Execute Tests via PHPUnit
+      run: php artisan test
