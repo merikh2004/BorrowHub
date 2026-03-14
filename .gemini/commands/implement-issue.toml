@@ -1,0 +1,12 @@
+description = "Delegate a GitHub issue implementation to Jules"
+prompt = """
+Let's use Jules to implement GitHub issue #{{args}}.
+
+Steps for Jules:
+1. Read the issue description for #{{args}}.
+2. Identify the affected modules (mobile-app, backend-api, etc.).
+3. Implement the solution following the project's architectural guidelines (MVVM for Mobile, MVC/Service-Repository for Backend).
+4. Add or update tests to verify the change.
+5. Ensure the project builds and tests pass.
+6. Create a pull request using when finished, use the repository's PR template at @.github/PULL_REQUEST_TEMPLATE.md and follow the @.gemini/skills/pr-creator-jules/SKILL.md.
+"""
