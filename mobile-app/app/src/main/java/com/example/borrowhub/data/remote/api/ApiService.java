@@ -5,6 +5,11 @@ import com.example.borrowhub.data.remote.dto.LoginResponseDTO;
 
 import com.example.borrowhub.data.remote.dto.DashboardStatsDTO;
 import com.example.borrowhub.data.remote.dto.RecentTransactionDTO;
+import com.example.borrowhub.data.remote.dto.ApiResponseDTO;
+import com.example.borrowhub.data.remote.dto.ItemDTO;
+import com.example.borrowhub.data.remote.dto.CategoryDTO;
+import com.example.borrowhub.data.remote.dto.CreateItemRequestDTO;
+import com.example.borrowhub.data.remote.dto.UpdateItemRequestDTO;
 
 import java.util.List;
 
@@ -12,7 +17,10 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
+import retrofit2.http.DELETE;
 import retrofit2.http.Header;
+import retrofit2.http.Path;
 
 /**
  * Interface defining the API endpoints for the BorrowHub backend.
@@ -31,5 +39,23 @@ public interface ApiService {
     @GET("api/v1/dashboard/recent-transactions")
     Call<List<RecentTransactionDTO>> getRecentTransactions(@Header("Authorization") String token);
 
-    // TODO: Add more endpoints (items, borrow requests, etc.)
+    // Inventory - Categories
+    @GET("api/v1/categories")
+    Call<ApiResponseDTO<List<CategoryDTO>>> getCategories(@Header("Authorization") String token);
+
+    // Inventory - Items
+    @GET("api/v1/items")
+    Call<ApiResponseDTO<List<ItemDTO>>> getItems(@Header("Authorization") String token);
+
+    @GET("api/v1/items/{id}")
+    Call<ApiResponseDTO<ItemDTO>> getItem(@Header("Authorization") String token, @Path("id") int itemId);
+
+    @POST("api/v1/items")
+    Call<ApiResponseDTO<ItemDTO>> createItem(@Header("Authorization") String token, @Body CreateItemRequestDTO request);
+
+    @PUT("api/v1/items/{id}")
+    Call<ApiResponseDTO<ItemDTO>> updateItem(@Header("Authorization") String token, @Path("id") int itemId, @Body UpdateItemRequestDTO request);
+
+    @DELETE("api/v1/items/{id}")
+    Call<ApiResponseDTO<Void>> deleteItem(@Header("Authorization") String token, @Path("id") int itemId);
 }
