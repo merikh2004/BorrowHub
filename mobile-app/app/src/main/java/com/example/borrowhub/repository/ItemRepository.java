@@ -11,7 +11,7 @@ import com.example.borrowhub.data.local.dao.ItemDao;
 import com.example.borrowhub.data.local.dao.CategoryDao;
 import com.example.borrowhub.data.local.entity.ItemEntity;
 import com.example.borrowhub.data.local.entity.CategoryEntity;
-import com.example.borrowhub.data.remote.api.ApiClient;
+import com.example.borrowhub.data.remote.ApiClient;
 import com.example.borrowhub.data.remote.api.ApiService;
 import com.example.borrowhub.data.remote.dto.ApiResponseDTO;
 import com.example.borrowhub.data.remote.dto.ItemDTO;
