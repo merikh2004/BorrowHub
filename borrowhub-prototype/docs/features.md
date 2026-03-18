@@ -68,9 +68,8 @@ Self-service tools for the logged-in user.
 *   **Password Management:** Secure workflow for changing account passwords with current password validation.
 *   **Role Transparency:** Clear visibility of the user's assigned role and permissions.
 
-## 9. System Branding & Visual Identity
-Ensures consistent branding and professional visual presence across the application.
-*   **Unified Application Logo:** Centralized use of `@src/assets/logo.png` across all entry points and UI components.
-*   **App Icon/Favicon:** Implementation of the system logo as the browser favicon and application icon.
-*   **Login & Header Branding:** Prominent branding on the login screen and header as established in `@src/app/screens/LoginScreen.tsx` and `@src/app/components/MainLayout.tsx`.
-*   **Entry Point Branding:** Branding integration within `@src/main.tsx` for visual consistency from the root level.
+## 9. Global Layout & Navigation `@src/app/components/MainLayout.tsx` & `@src/app/components/ui/navigation-menu.tsx`
+Provides the persistent application shell and navigation structure.
+*   **Persistent Header:** Displays the application logo and user profile dropdown across all main views.
+*   **User Profile Menu:** Allows quick access to Account Settings, User Management, Student Management, and Logout based on the user's role.
+*   **Responsive Navigation:** A sticky bottom navigation bar utilizing `navigation-menu` components for seamless transitions between Home, Inventory, Transaction, and Logs.

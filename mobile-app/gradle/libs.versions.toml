@@ -11,6 +11,7 @@ lifecycle = "2.10.0"
 room = "2.8.4"
 mockito = "4.11.0"
 coreTesting = "2.2.0"
+navigation = "2.7.7"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -26,6 +27,8 @@ room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
 core-testing = { group = "androidx.arch.core", name = "core-testing", version.ref = "coreTesting" }
+navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment", version.ref = "navigation" }
+navigation-ui = { group = "androidx.navigation", name = "navigation-ui", version.ref = "navigation" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

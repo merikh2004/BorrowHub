@@ -54,6 +54,10 @@ dependencies {
     implementation(libs.lifecycle.livedata)
     implementation(libs.room.runtime)
     annotationProcessor(libs.room.compiler)
+
+    // Navigation
+    implementation(libs.navigation.fragment)
+    implementation(libs.navigation.ui)
     
     // Retrofit (since ApiService uses it, we should make sure it's here if missing)
     implementation("com.squareup.retrofit2:retrofit:2.9.0")

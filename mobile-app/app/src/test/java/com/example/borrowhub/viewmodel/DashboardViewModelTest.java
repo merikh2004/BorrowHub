@@ -61,7 +61,7 @@ public class DashboardViewModelTest {
         when(sessionManager.getAuthToken()).thenReturn(token);
 
         MutableLiveData<DashboardStatsEntity> mockStatsLiveData = new MutableLiveData<>();
-        DashboardStatsEntity mockStats = new DashboardStatsEntity(10, 5, 2);
+        DashboardStatsEntity mockStats = new DashboardStatsEntity(10, 5, 2, 0);
         mockStatsLiveData.setValue(mockStats);
         when(repository.getDashboardStats(token)).thenReturn(mockStatsLiveData);
 
