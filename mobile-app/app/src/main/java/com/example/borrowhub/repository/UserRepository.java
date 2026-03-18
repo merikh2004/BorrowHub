@@ -32,8 +32,8 @@ public class UserRepository {
     private final ExecutorService executorService;
 
     public UserRepository(Application application) {
-        this.apiService = ApiClient.getInstance().getApiService();
         this.sessionManager = new SessionManager(application);
+        this.apiService = ApiClient.getInstance(this.sessionManager).getApiService();
         this.userDao = AppDatabase.getInstance(application).userDao();
         this.executorService = Executors.newSingleThreadExecutor();
     }
@@ -82,23 +82,55 @@ public class UserRepository {
         return loginResult;
     }
 
-    public void logout() {
+    public LiveData<Boolean> logout() {
+        MutableLiveData<Boolean> logoutResult = new MutableLiveData<>();
+
         String token = sessionManager.getAuthToken();
-        if (token != null) {
+        if (isValidToken(token)) {
             apiService.logout(token).enqueue(new Callback<Void>() {
                 @Override
                 public void onResponse(Call<Void> call, Response<Void> response) {
-                    // Ignored
+                    clearLocalSession(logoutResult);
                 }
 
                 @Override
                 public void onFailure(Call<Void> call, Throwable t) {
-                    // Ignored
+                    clearLocalSession(logoutResult);
                 }
             });
+        } else {
+            clearLocalSession(logoutResult);
         }
-        
-        sessionManager.clearSession();
-        executorService.execute(userDao::deleteAll);
+
+        return logoutResult;
+    }
+
+    private void clearLocalSession(MutableLiveData<Boolean> logoutResult) {
+        try {
+            sessionManager.clearSession();
+        } catch (RuntimeException e) {
+            Log.e(TAG, "Failed to clear auth session", e);
+            logoutResult.postValue(false);
+            return;
+        }
+
+        executorService.execute(() -> {
+            try {
+                userDao.deleteAll();
+                logoutResult.postValue(true);
+            } catch (RuntimeException e) {
+                Log.e(TAG, "Failed to clear local session", e);
+                logoutResult.postValue(false);
+            }
+        });
+    }
+
+    public boolean hasActiveSession() {
+        String token = sessionManager.getAuthToken();
+        return isValidToken(token);
+    }
+
+    private boolean isValidToken(String token) {
+        return token != null && !token.trim().isEmpty();
     }
 }

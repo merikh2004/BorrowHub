@@ -52,7 +52,7 @@ public class ItemRepository {
     public ItemRepository(AppDatabase database, SessionManager sessionManager) {
         this.itemDao = database.itemDao();
         this.categoryDao = database.categoryDao();
-        this.apiService = ApiClient.getInstance().getApiService();
+        this.apiService = ApiClient.getInstance(sessionManager).getApiService();
         this.sessionManager = sessionManager;
         this.executorService = Executors.newSingleThreadExecutor();
     }

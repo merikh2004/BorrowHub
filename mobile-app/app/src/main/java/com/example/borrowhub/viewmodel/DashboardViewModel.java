@@ -32,7 +32,7 @@ public class DashboardViewModel extends AndroidViewModel {
 
         AppDatabase db = AppDatabase.getInstance(application);
         repository = new DashboardRepository(
-            ApiClient.getInstance().getApiService(),
+            ApiClient.getInstance(sessionManager).getApiService(),
             db.dashboardStatsDao(),
             db.recentTransactionDao()
         );

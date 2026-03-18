@@ -105,4 +105,28 @@ public class AuthViewModelTest {
         verify(mockErrorObserver).onChanged("Invalid Credentials: Username or password is incorrect.");
         verify(mockLoginResultObserver).onChanged(false);
     }
+
+    @Test
+    public void hasActiveSession_returnsRepositoryValue() {
+        when(mockUserRepository.hasActiveSession()).thenReturn(true);
+
+        org.junit.Assert.assertTrue(authViewModel.hasActiveSession());
+    }
+
+    @Test
+    public void logout_success_updatesLoadingAndResult() {
+        MutableLiveData<Boolean> repoResult = new MutableLiveData<>();
+        when(mockUserRepository.logout()).thenReturn(repoResult);
+
+        authViewModel.getLogoutResult().observeForever(mockLoginResultObserver);
+        authViewModel.logout();
+
+        verify(mockIsLoadingObserver).onChanged(true);
+
+        repoResult.setValue(true);
+
+        verify(mockIsLoadingObserver).onChanged(false);
+        verify(mockLoginResultObserver).onChanged(true);
+        authViewModel.getLogoutResult().removeObserver(mockLoginResultObserver);
+    }
 }

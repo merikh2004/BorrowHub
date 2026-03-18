@@ -1,7 +1,5 @@
 package com.example.borrowhub.repository;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -44,6 +42,8 @@ public class UserRepositoryTest {
     private Call<LoginResponseDTO> mockCall;
     @Mock
     private Observer<Boolean> mockObserver;
+    @Mock
+    private Call<Void> mockLogoutCall;
 
     private UserRepository userRepository;
 
@@ -98,11 +98,15 @@ public class UserRepositoryTest {
     public void logout_clearsSessionAndDeletesUser() {
         // Arrange
         when(mockSessionManager.getAuthToken()).thenReturn("Bearer fake_token");
-        Call<Void> mockLogoutCall = org.mockito.Mockito.mock(Call.class);
         when(mockApiService.logout("Bearer fake_token")).thenReturn(mockLogoutCall);
 
         // Act
-        userRepository.logout();
+        LiveData<Boolean> result = userRepository.logout();
+        result.observeForever(mockObserver);
+
+        ArgumentCaptor<Callback<Void>> captor = ArgumentCaptor.forClass(Callback.class);
+        verify(mockLogoutCall).enqueue(captor.capture());
+        captor.getValue().onResponse(mockLogoutCall, Response.success(null));
 
         // Assert
         verify(mockSessionManager).clearSession();
@@ -115,5 +119,7 @@ public class UserRepositoryTest {
         
         verify(mockUserDao).deleteAll();
         verify(mockApiService).logout("Bearer fake_token");
+        verify(mockObserver).onChanged(true);
+        result.removeObserver(mockObserver);
     }
 }

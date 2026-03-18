@@ -23,6 +23,10 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         viewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+        if (viewModel.hasActiveSession()) {
+            navigateToMain();
+            return;
+        }
 
         setupObservers();
         setupListeners();
@@ -56,11 +60,15 @@ public class LoginActivity extends AppCompatActivity {
             viewModel.login(username, password).observe(this, isSuccess -> {
                 if (Boolean.TRUE.equals(isSuccess)) {
                     Toast.makeText(this, com.example.borrowhub.R.string.login_success, Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
+                    navigateToMain();
                 }
             });
         });
+    }
+
+    private void navigateToMain() {
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 }
