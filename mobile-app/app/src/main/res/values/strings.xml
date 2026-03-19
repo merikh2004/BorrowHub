@@ -25,7 +25,7 @@
     <string name="dashboard_manage_inventory">Manage Inventory</string>
     <string name="dashboard_manage_inventory_desc">View and edit items</string>
     <string name="dashboard_recent_transactions">Recent Transactions</string>
-    <string name="dashboard_view_all">View All →</string>
+    <string name="dashboard_view_all">View All</string>
 
     <string name="inventory_title">Inventory Management</string>
     <string name="inventory_subtitle">Manage and track all resources</string>

@@ -282,6 +282,9 @@
                 android:padding="8dp"
                 android:clickable="true"
                 android:focusable="true"
+                android:gravity="center_vertical"
+                android:drawableEnd="@drawable/ic_arrow_forward"
+                android:drawablePadding="4dp"
                 android:background="?android:attr/selectableItemBackground" />
         </RelativeLayout>
 
