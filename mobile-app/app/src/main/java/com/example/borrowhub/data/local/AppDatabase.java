@@ -18,8 +18,16 @@ import com.example.borrowhub.data.local.dao.ItemDao;
 import com.example.borrowhub.data.local.entity.ItemEntity;
 import com.example.borrowhub.data.local.dao.CategoryDao;
 import com.example.borrowhub.data.local.entity.CategoryEntity;
+import com.example.borrowhub.data.local.dao.StudentDao;
+import com.example.borrowhub.data.local.entity.StudentEntity;
+import com.example.borrowhub.data.local.dao.CourseDao;
+import com.example.borrowhub.data.local.entity.CourseEntity;
+import com.example.borrowhub.data.local.dao.ActivityLogDao;
+import com.example.borrowhub.data.local.dao.TransactionLogDao;
+import com.example.borrowhub.data.local.entity.ActivityLogEntity;
+import com.example.borrowhub.data.local.entity.TransactionLogEntity;
 
-@Database(entities = {ExampleEntity.class, User.class, DashboardStatsEntity.class, RecentTransactionEntity.class, ItemEntity.class, CategoryEntity.class}, version = 3, exportSchema = false)
+@Database(entities = {ExampleEntity.class, User.class, DashboardStatsEntity.class, RecentTransactionEntity.class, ItemEntity.class, CategoryEntity.class, StudentEntity.class, CourseEntity.class, ActivityLogEntity.class, TransactionLogEntity.class}, version = 5, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static volatile AppDatabase instance;
@@ -30,6 +38,10 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract RecentTransactionDao recentTransactionDao();
     public abstract ItemDao itemDao();
     public abstract CategoryDao categoryDao();
+    public abstract StudentDao studentDao();
+    public abstract CourseDao courseDao();
+    public abstract ActivityLogDao activityLogDao();
+    public abstract TransactionLogDao transactionLogDao();
 
     public static AppDatabase getInstance(Context context) {
         if (instance == null) {
@@ -39,7 +51,8 @@ public abstract class AppDatabase extends RoomDatabase {
                             context.getApplicationContext(),
                             AppDatabase.class,
                             "borrowhub_database"
-                    ).build();
+                    ).fallbackToDestructiveMigration()
+                    .build();
                 }
             }
         }

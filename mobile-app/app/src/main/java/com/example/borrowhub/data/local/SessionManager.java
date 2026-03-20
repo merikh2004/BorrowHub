@@ -3,9 +3,13 @@ package com.example.borrowhub.data.local;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import androidx.appcompat.app.AppCompatDelegate;
+
 public class SessionManager {
     private static final String PREF_NAME = "BorrowHubPrefs";
     private static final String KEY_AUTH_TOKEN = "auth_token";
+    private static final String KEY_THEME_MODE = "theme_mode";
+    private static final int DEFAULT_THEME_MODE = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
 
     private final SharedPreferences prefs;
 
@@ -23,5 +27,13 @@ public class SessionManager {
 
     public void clearSession() {
         prefs.edit().remove(KEY_AUTH_TOKEN).apply();
+    }
+
+    public void setThemeMode(int mode) {
+        prefs.edit().putInt(KEY_THEME_MODE, mode).apply();
+    }
+
+    public int getThemeMode() {
+        return prefs.getInt(KEY_THEME_MODE, DEFAULT_THEME_MODE);
     }
 }
