@@ -51,4 +51,43 @@
     <string name="inventory_item_updated">Item updated</string>
     <string name="inventory_item_deleted">Item deleted</string>
     <string name="inventory_stock_format">Available %1$d / %2$d</string>
+
+    <!-- Transaction screen -->
+    <string name="transaction_title">Transactions</string>
+    <string name="transaction_subtitle">Borrow and return items</string>
+    <string name="transaction_tab_borrow">Borrow Item</string>
+    <string name="transaction_tab_return">Return Item</string>
+    <string name="transaction_return_coming_soon">Return management coming soon.</string>
+
+    <!-- Borrow form - info card -->
+    <string name="transaction_date_label">Date &amp; Time:</string>
+    <string name="transaction_processed_by_label">Processed by:</string>
+    <string name="transaction_return_by_label">Return by:</string>
+    <string name="transaction_return_by_value">End of day (Same day)</string>
+    <string name="transaction_staff_name">System Staff</string>
+
+    <!-- Borrow form - borrower information -->
+    <string name="transaction_borrower_info_title">Borrower Information</string>
+    <string name="transaction_student_number_label">Student Number *</string>
+    <string name="transaction_full_name_label">Full Name *</string>
+    <string name="transaction_course_label">Course *</string>
+    <string name="transaction_collateral_label">Collateral *</string>
+
+    <!-- Borrow form - items -->
+    <string name="transaction_items_title">Items to Borrow</string>
+    <string name="transaction_add_item">Add Item</string>
+    <string name="transaction_remove_item">Remove</string>
+    <string name="transaction_item_type_label">Category / Type</string>
+    <string name="transaction_item_name_label">Specific Item</string>
+
+    <!-- Borrow form - policy note -->
+    <string name="transaction_important_note">Important: All borrowed items must be returned by the end of the day.</string>
+
+    <!-- Borrow form - submit -->
+    <string name="transaction_submit_borrow">Submit Borrow Request</string>
+
+    <!-- Success state -->
+    <string name="transaction_success_title">Borrow Request Submitted</string>
+    <string name="transaction_success_desc">The items have been successfully assigned to the borrower.</string>
+    <string name="transaction_success_return_label">Return by end of day:</string>
 </resources>
