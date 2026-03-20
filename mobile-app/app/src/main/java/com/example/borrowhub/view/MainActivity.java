@@ -4,7 +4,9 @@ import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.graphics.Insets;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
@@ -14,11 +16,12 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.borrowhub.R;
+import com.example.borrowhub.data.local.SessionManager;
 import com.example.borrowhub.databinding.ActivityMainBinding;
 import com.example.borrowhub.viewmodel.AuthViewModel;
 
 import android.content.Intent;
-import android.view.Menu;
+import android.content.res.Configuration;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -27,10 +30,13 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private NavController navController;
     private AuthViewModel authViewModel;
+    private SessionManager sessionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sessionManager = new SessionManager(this);
+        applySavedThemeMode();
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         EdgeToEdge.enable(this);
@@ -106,12 +112,16 @@ public class MainActivity extends AppCompatActivity {
                     navController.navigate(R.id.studentManagementFragment);
                 }
                 return true;
+            } else if (itemId == R.id.action_theme_toggle) {
+                toggleThemeMode();
+                return true;
             } else if (itemId == R.id.action_logout) {
                 authViewModel.logout();
                 return true;
             }
             return false;
         });
+        binding.topAppBar.post(this::refreshThemeMenuItem);
     }
 
     @Override
@@ -137,5 +147,51 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-}
 
+    private void applySavedThemeMode() {
+        AppCompatDelegate.setDefaultNightMode(sessionManager.getThemeMode());
+    }
+
+    private void toggleThemeMode() {
+        int currentMode = sessionManager.getThemeMode();
+        int nextMode;
+        if (currentMode == AppCompatDelegate.MODE_NIGHT_YES) {
+            nextMode = AppCompatDelegate.MODE_NIGHT_NO;
+        } else if (currentMode == AppCompatDelegate.MODE_NIGHT_NO) {
+            nextMode = AppCompatDelegate.MODE_NIGHT_YES;
+        } else {
+            int currentUiMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+            boolean isCurrentlyDark = currentUiMode == Configuration.UI_MODE_NIGHT_YES;
+            nextMode = isCurrentlyDark
+                    ? AppCompatDelegate.MODE_NIGHT_NO
+                    : AppCompatDelegate.MODE_NIGHT_YES;
+        }
+
+        sessionManager.setThemeMode(nextMode);
+        AppCompatDelegate.setDefaultNightMode(nextMode);
+        refreshThemeMenuItem();
+    }
+
+    private void updateThemeMenuItem(MenuItem themeItem) {
+        if (themeItem == null) {
+            return;
+        }
+
+        int savedMode = sessionManager.getThemeMode();
+        boolean isDarkMode;
+        if (savedMode == AppCompatDelegate.MODE_NIGHT_YES) {
+            isDarkMode = true;
+        } else if (savedMode == AppCompatDelegate.MODE_NIGHT_NO) {
+            isDarkMode = false;
+        } else {
+            int currentUiMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+            isDarkMode = currentUiMode == Configuration.UI_MODE_NIGHT_YES;
+        }
+        themeItem.setTitle(isDarkMode ? R.string.theme_switch_to_light : R.string.theme_switch_to_dark);
+        themeItem.setIcon(ContextCompat.getDrawable(this, isDarkMode ? R.drawable.ic_sun : R.drawable.ic_moon));
+    }
+
+    private void refreshThemeMenuItem() {
+        updateThemeMenuItem(binding.topAppBar.getMenu().findItem(R.id.action_theme_toggle));
+    }
+}
