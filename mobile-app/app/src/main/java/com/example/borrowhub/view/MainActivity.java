@@ -51,6 +51,9 @@ public class MainActivity extends AppCompatActivity {
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
         setupObservers();
 
+        // Set settings overflow icon
+        binding.topAppBar.setOverflowIcon(ContextCompat.getDrawable(this, R.drawable.ic_settings));
+
         // Setup Navigation
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
         if (navHostFragment != null) {

@@ -17,6 +17,21 @@
         <item name="android:statusBarColor">@color/primary_crimson_dark</item>
         <item name="android:navigationBarColor">@color/gray_100</item>
         <item name="android:windowLightStatusBar">false</item>
+
+        <!-- Improved Dialog UI -->
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.App.MaterialAlertDialog</item>
+    </style>
+
+    <style name="ThemeOverlay.App.MaterialAlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="alertDialogStyle">@style/MaterialAlertDialog.App</item>
+    </style>
+
+    <style name="MaterialAlertDialog.App" parent="MaterialAlertDialog.Material3">
+        <item name="shapeAppearance">@style/ShapeAppearance.App.Dialog</item>
+    </style>
+
+    <style name="ShapeAppearance.App.Dialog" parent="ShapeAppearance.Material3.MediumComponent">
+        <item name="cornerSize">24dp</item>
     </style>
 
     <style name="Theme.BorrowHub" parent="Base.Theme.BorrowHub" />
