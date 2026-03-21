@@ -35,7 +35,7 @@ class ItemSeeder extends Seeder
         for ($i = 1; $i <= 30; $i++) {
             Item::create([
                 'category_id' => $laptopCategory->id,
-                'name' => "Laptop $i",
+                'name' => "Laptop #$i",
                 'total_quantity' => 1,
                 'available_quantity' => 1,
                 'status' => 'active',
