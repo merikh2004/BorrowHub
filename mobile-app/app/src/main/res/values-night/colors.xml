@@ -32,4 +32,10 @@
     <color name="student_course_badge_border">#1D4ED8</color>
     <color name="student_avatar_bg">#2D3069</color>
     <color name="student_avatar_text">#A5B4FC</color>
+    <color name="user_role_admin_text">#C4B5FD</color>
+    <color name="user_role_admin_bg">#2E1E5A</color>
+    <color name="user_role_admin_border">#5B21B6</color>
+    <color name="user_role_staff_text">#86EFAC</color>
+    <color name="user_role_staff_bg">#1C3A2A</color>
+    <color name="user_role_staff_border">#15803D</color>
 </resources>

@@ -1,14 +1,15 @@
 <resources>
     <string name="app_name">BorrowHub</string>
     <string name="login_title">BorrowHub</string>
-    <string name="login_subtitle">Management Information System</string>
+    <string name="login_subtitle">Borrowable Asset Management System
+</string>
     <string name="username_label">Username</string>
     <string name="username_hint">Enter your username (admin / staff)</string>
     <string name="password_label">Password</string>
     <string name="password_hint">Enter your password (123)</string>
     <string name="sign_in_button">Sign In</string>
     <string name="login_footer_text">Authorized personnel only</string>
-    <string name="login_copyright">© 2026 Computer Science Studies. All rights reserved.</string>
+    <string name="login_copyright">© 2026 Computer Studies Department. All rights reserved.</string>
     <string name="error_empty_fields">Username and password cannot be empty</string>
     <string name="login_failed">Invalid Credentials: Username or password is incorrect.</string>
     <string name="login_success">Login Successful</string>
@@ -92,6 +93,39 @@
     <string name="student_update_processing">Updating student…</string>
     <string name="student_delete_processing">Deleting student…</string>
     <string name="student_import_processing">Importing students…</string>
+
+    <!-- User Management -->
+    <string name="user_title">User Management</string>
+    <string name="user_subtitle">Manage administrator and staff accounts</string>
+    <string name="user_search_hint">Search by name or username…</string>
+    <string name="user_empty_state">No users found.</string>
+    <string name="user_total_count">Total: %1$d</string>
+    <string name="user_field_full_name">Full Name</string>
+    <string name="user_field_username">Username</string>
+    <string name="user_field_role">Role</string>
+    <string name="user_username_format">@%1$s</string>
+    <string name="user_role_admin">Admin</string>
+    <string name="user_role_staff">Staff</string>
+    <string name="user_content_desc_reset_password">Reset password</string>
+    <string name="user_content_desc_edit">Edit user</string>
+    <string name="user_content_desc_delete">Delete user</string>
+    <string name="user_delete_title">Delete User</string>
+    <string name="user_delete_message">Delete %1$s?</string>
+    <string name="user_delete_protected_admin">Cannot delete the admin user</string>
+    <string name="user_reset_password_title">Reset Password</string>
+    <string name="user_reset_password_message">Reset password for @%1$s to the system default?</string>
+    <string name="user_action_cancel">Cancel</string>
+    <string name="user_action_delete">Delete</string>
+    <string name="user_action_reset">Reset</string>
+    <string name="user_action_add">Add User</string>
+    <string name="user_action_save">Save User</string>
+    <string name="user_action_update">Save Changes</string>
+    <string name="user_dialog_add_title">Add New User</string>
+    <string name="user_dialog_edit_title">Edit User</string>
+    <string name="user_error_complete_fields">Please fill in all fields</string>
+    <string name="user_add_processing">Adding user…</string>
+    <string name="user_update_processing">Updating user…</string>
+    <string name="user_operation_success">Operation successful</string>
 
     <!-- Transaction screen -->
     <string name="transaction_title">Transactions</string>

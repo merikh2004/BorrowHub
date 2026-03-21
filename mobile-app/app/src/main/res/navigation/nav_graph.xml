@@ -35,4 +35,10 @@
         android:label="Student Management"
         tools:layout="@layout/fragment_student_management" />
 
+    <fragment
+        android:id="@+id/userManagementFragment"
+        android:name="com.example.borrowhub.view.fragment.UserManagementFragment"
+        android:label="User Management"
+        tools:layout="@layout/fragment_user_management" />
+
 </navigation>
