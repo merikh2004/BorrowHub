@@ -197,4 +197,25 @@
     <string name="logs_search_hint">Search by user, ID, or details…</string>
     <string name="logs_transaction_empty_state">No transaction logs match your filters.</string>
     <string name="logs_activity_empty_state">No activity logs match your filters.</string>
+
+    <!-- Account Settings -->
+    <string name="account_settings_title">Account &amp; Security</string>
+    <string name="account_settings_subtitle">Manage profile information and password</string>
+    <string name="account_settings_general_info">General Information</string>
+    <string name="account_settings_security">Security</string>
+    <string name="account_settings_username">Username</string>
+    <string name="account_settings_role">Role</string>
+    <string name="account_settings_full_name">Full Name</string>
+    <string name="account_settings_current_password">Current Password</string>
+    <string name="account_settings_new_password">New Password</string>
+    <string name="account_settings_confirm_new_password">Confirm New Password</string>
+    <string name="account_settings_save_changes">Save Changes</string>
+    <string name="account_settings_update_password">Update Password</string>
+    <string name="account_settings_profile_updated">Profile updated successfully.</string>
+    <string name="account_settings_profile_update_failed">Unable to update profile. Please try again.</string>
+    <string name="account_settings_password_updated">Password updated successfully.</string>
+    <string name="account_settings_password_update_failed">Unable to update password. Please try again.</string>
+    <string name="account_settings_password_mismatch">New password and confirmation do not match.</string>
+    <string name="account_settings_error_fields_required">Please fill in all required fields.</string>
+    <string name="account_settings_loading">Account settings operation in progress</string>
 </resources>

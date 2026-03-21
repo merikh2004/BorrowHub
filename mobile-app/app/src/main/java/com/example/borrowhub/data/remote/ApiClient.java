@@ -4,6 +4,7 @@ import com.example.borrowhub.data.local.SessionManager;
 import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import com.example.borrowhub.BuildConfig;
@@ -19,7 +20,12 @@ public class ApiClient {
 
     private ApiClient(SessionManager sessionManager) {
         this.sessionManager = sessionManager;
+
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .addInterceptor(loggingInterceptor)
                 .addInterceptor(chain -> {
                     Request originalRequest = chain.request();
                     String authToken = this.sessionManager.getAuthToken();

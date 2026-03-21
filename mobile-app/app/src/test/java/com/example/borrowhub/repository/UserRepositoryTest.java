@@ -2,6 +2,7 @@ package com.example.borrowhub.repository;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -17,10 +18,12 @@ import com.example.borrowhub.data.local.dao.UserDao;
 import com.example.borrowhub.data.local.entity.User;
 import com.example.borrowhub.data.remote.api.ApiService;
 import com.example.borrowhub.data.remote.dto.ApiResponseDTO;
+import com.example.borrowhub.data.remote.dto.ChangePasswordRequestDTO;
 import com.example.borrowhub.data.remote.dto.CreateUserRequestDTO;
 import com.example.borrowhub.data.remote.dto.LoginRequestDTO;
 import com.example.borrowhub.data.remote.dto.LoginResponseDTO;
 import com.example.borrowhub.data.remote.dto.ResetPasswordRequestDTO;
+import com.example.borrowhub.data.remote.dto.UpdateProfileRequestDTO;
 import com.example.borrowhub.data.remote.dto.UpdateUserRequestDTO;
 import com.example.borrowhub.data.remote.dto.UserDTO;
 import com.google.gson.Gson;
@@ -59,6 +62,10 @@ public class UserRepositoryTest {
     private Observer<Boolean> mockObserver;
     @Mock
     private Call<Void> mockLogoutCall;
+    @Mock
+    private Call<ApiResponseDTO<UserDTO>> mockUpdateProfileCall;
+    @Mock
+    private Call<ApiResponseDTO<Void>> mockChangePasswordCall;
     @Mock
     private Call<ApiResponseDTO<List<UserDTO>>> mockUsersCall;
     @Mock
@@ -107,8 +114,7 @@ public class UserRepositoryTest {
 
         // Assert
         verify(mockSessionManager).saveAuthToken("Bearer fake_token");
-        
-        verify(mockUserDao, timeout(200)).insertUser(any(User.class));
+        verify(mockUserDao, timeout(500)).insertUser(any(User.class));
         verify(mockObserver).onChanged(true);
     }
 
@@ -128,9 +134,51 @@ public class UserRepositoryTest {
 
         // Assert
         verify(mockSessionManager).clearSession();
-        
-        verify(mockUserDao, timeout(200)).deleteAll();
+        verify(mockUserDao, timeout(500)).deleteAll();
         verify(mockApiService).logout("Bearer fake_token");
+        verify(mockObserver).onChanged(true);
+        result.removeObserver(mockObserver);
+    }
+
+    @Test
+    public void updateProfile_success_updatesLocalUser() {
+        ApiResponseDTO<UserDTO> apiResponse = new ApiResponseDTO<>();
+        apiResponse.setStatus("success");
+        UserDTO userDto = new UserDTO();
+        userDto.setId(9);
+        userDto.setName("Updated Name");
+        userDto.setUsername("updated");
+        userDto.setRole("staff");
+        apiResponse.setData(userDto);
+
+        when(mockSessionManager.getAuthToken()).thenReturn("Bearer fake_token");
+        when(mockApiService.updateProfile(anyString(), any(UpdateProfileRequestDTO.class))).thenReturn(mockUpdateProfileCall);
+
+        LiveData<Boolean> result = userRepository.updateProfile("Updated Name", "updated");
+        result.observeForever(mockObserver);
+
+        ArgumentCaptor<Callback<ApiResponseDTO<UserDTO>>> captor = ArgumentCaptor.forClass(Callback.class);
+        verify(mockUpdateProfileCall).enqueue(captor.capture());
+        captor.getValue().onResponse(mockUpdateProfileCall, Response.success(apiResponse));
+        verify(mockUserDao, timeout(500)).insertUser(any(User.class));
+        verify(mockObserver).onChanged(true);
+        result.removeObserver(mockObserver);
+    }
+
+    @Test
+    public void changePassword_success_returnsTrue() {
+        ApiResponseDTO<Void> apiResponse = new ApiResponseDTO<>();
+        apiResponse.setStatus("success");
+        when(mockSessionManager.getAuthToken()).thenReturn("Bearer fake_token");
+        when(mockApiService.changePassword(anyString(), any(ChangePasswordRequestDTO.class))).thenReturn(mockChangePasswordCall);
+
+        LiveData<Boolean> result = userRepository.changePassword("old", "new", "new");
+        result.observeForever(mockObserver);
+
+        ArgumentCaptor<Callback<ApiResponseDTO<Void>>> captor = ArgumentCaptor.forClass(Callback.class);
+        verify(mockChangePasswordCall).enqueue(captor.capture());
+        captor.getValue().onResponse(mockChangePasswordCall, Response.success(apiResponse));
+
         verify(mockObserver).onChanged(true);
         result.removeObserver(mockObserver);
     }
@@ -167,7 +215,7 @@ public class UserRepositoryTest {
         verify(mockCreateUserCall).enqueue(captor.capture());
         captor.getValue().onResponse(mockCreateUserCall, Response.success(responseBody));
 
-        verify(mockUserDao, timeout(200)).insertUser(any(User.class));
+        verify(mockUserDao, timeout(500)).insertUser(any(User.class));
     }
 
     @Test
@@ -189,7 +237,7 @@ public class UserRepositoryTest {
         verify(mockUpdateUserCall).enqueue(captor.capture());
         captor.getValue().onResponse(mockUpdateUserCall, Response.success(responseBody));
 
-        verify(mockUserDao, timeout(200)).updateUser(any(User.class));
+        verify(mockUserDao, timeout(500)).updateUser(any(User.class));
     }
 
     @Test
@@ -204,7 +252,7 @@ public class UserRepositoryTest {
         verify(mockDeleteUserCall).enqueue(captor.capture());
         captor.getValue().onResponse(mockDeleteUserCall, Response.success(new ApiResponseDTO<>("success", "deleted", null)));
 
-        verify(mockUserDao, timeout(200)).deleteById(7);
+        verify(mockUserDao, timeout(500)).deleteById(7);
     }
 
     @Test

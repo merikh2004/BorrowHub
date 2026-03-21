@@ -101,7 +101,9 @@ public class MainActivity extends AppCompatActivity {
         binding.topAppBar.setOnMenuItemClickListener(item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.action_account_settings) {
-                Toast.makeText(this, "Account Settings Clicked", Toast.LENGTH_SHORT).show();
+                if (navController != null) {
+                    navController.navigate(R.id.accountSettingsFragment);
+                }
                 return true;
             } else if (itemId == R.id.action_user_management) {
                 if (navController != null) {

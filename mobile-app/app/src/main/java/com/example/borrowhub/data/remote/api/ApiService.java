@@ -14,6 +14,8 @@ import com.example.borrowhub.data.remote.dto.StudentDTO;
 import com.example.borrowhub.data.remote.dto.CreateStudentRequestDTO;
 import com.example.borrowhub.data.remote.dto.UpdateStudentRequestDTO;
 import com.example.borrowhub.data.remote.dto.ImportStudentsRequestDTO;
+import com.example.borrowhub.data.remote.dto.UpdateProfileRequestDTO;
+import com.example.borrowhub.data.remote.dto.ChangePasswordRequestDTO;
 import com.example.borrowhub.data.remote.dto.UserDTO;
 import com.example.borrowhub.data.remote.dto.CreateUserRequestDTO;
 import com.example.borrowhub.data.remote.dto.UpdateUserRequestDTO;
@@ -123,5 +125,18 @@ public interface ApiService {
             @Query("action") String action,
             @Query("target_user_id") String targetUserId,
             @Query("performed_by") String performedBy
+    );
+
+    // Account Settings
+    @PUT("api/v1/user")
+    Call<ApiResponseDTO<UserDTO>> updateProfile(
+            @Header("Authorization") String token,
+            @Body UpdateProfileRequestDTO request
+    );
+
+    @POST("api/v1/user/change-password")
+    Call<ApiResponseDTO<Void>> changePassword(
+            @Header("Authorization") String token,
+            @Body ChangePasswordRequestDTO request
     );
 }
