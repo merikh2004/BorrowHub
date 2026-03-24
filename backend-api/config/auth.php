@@ -112,4 +112,16 @@ return [
 
     'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Default User Password
+    |--------------------------------------------------------------------------
+    |
+    | This value is used as the temporary password when an administrator
+    | resets a user's password. It's recommended to set this in your .env file.
+    |
+    */
+
+    'default_user_password' => env('AUTH_DEFAULT_USER_PASSWORD', 'borrowhub123'),
+
 ];

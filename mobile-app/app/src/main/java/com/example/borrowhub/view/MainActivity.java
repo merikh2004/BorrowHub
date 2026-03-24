@@ -17,25 +17,35 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.example.borrowhub.R;
 import com.example.borrowhub.data.local.SessionManager;
+import com.example.borrowhub.data.local.entity.User;
+import com.example.borrowhub.repository.UserRepository;
 import com.example.borrowhub.databinding.ActivityMainBinding;
+import com.example.borrowhub.databinding.LayoutProfileDropdownBinding;
 import com.example.borrowhub.viewmodel.AuthViewModel;
 
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.PopupWindow;
 import android.widget.Toast;
+import android.view.ViewGroup;
+import androidx.appcompat.content.res.AppCompatResources;
 
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
     private NavController navController;
     private AuthViewModel authViewModel;
+    private UserRepository userRepository;
     private SessionManager sessionManager;
+    private User currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sessionManager = new SessionManager(this);
+        userRepository = new UserRepository(getApplication());
         applySavedThemeMode();
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -70,29 +80,24 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             });
 
-            // Correctly handle highlight state for non-bottom-nav destinations
+            // Correctly handle highlight state for all destinations
             navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
                 int destId = destination.getId();
-                // Check if the destination is part of the bottom menu
-                boolean isInBottomMenu = destId == R.id.homeFragment ||
-                                         destId == R.id.inventoryFragment ||
-                                         destId == R.id.transactionFragment ||
-                                         destId == R.id.logsFragment;
+                MenuItem item = binding.bottomNavigationView.getMenu().findItem(destId);
 
-                if (!isInBottomMenu) {
-                    // Deselect all items if we are in a sub-view (like Student Management)
-                    // but NOT if we are in one of the main tabs.
+                if (item != null) {
+                    // Destination is in bottom menu, select it directly.
+                    // setChecked(true) automatically unchecks others in an exclusive group.
+                    item.setChecked(true);
+                } else {
+                    // Destination is NOT in bottom menu (e.g., Student/User Management)
+                    // Temporarily disable exclusive checkable to allow having NO items selected.
                     binding.bottomNavigationView.getMenu().setGroupCheckable(0, true, false);
                     for (int i = 0; i < binding.bottomNavigationView.getMenu().size(); i++) {
                         binding.bottomNavigationView.getMenu().getItem(i).setChecked(false);
                     }
+                    // Re-enable exclusive checkable for future bottom menu interactions.
                     binding.bottomNavigationView.getMenu().setGroupCheckable(0, true, true);
-                } else {
-                    // Select the corresponding item in the bottom navigation view
-                    for (int i = 0; i < binding.bottomNavigationView.getMenu().size(); i++) {
-                        MenuItem item = binding.bottomNavigationView.getMenu().getItem(i);
-                        item.setChecked(item.getItemId() == destId);
-                    }
                 }
             });
         }
@@ -100,30 +105,98 @@ public class MainActivity extends AppCompatActivity {
         // Setup TopAppBar menu clicks
         binding.topAppBar.setOnMenuItemClickListener(item -> {
             int itemId = item.getItemId();
-            if (itemId == R.id.action_account_settings) {
-                Toast.makeText(this, "Account Settings Clicked", Toast.LENGTH_SHORT).show();
-                return true;
-            } else if (itemId == R.id.action_user_management) {
-                if (navController != null) {
-                    navController.navigate(R.id.userManagementFragment);
+            if (itemId == R.id.action_profile) {
+                // Find the view for the menu item to anchor the dropdown
+                View menuItemView = findViewById(R.id.action_profile);
+                if (menuItemView == null) {
+                    // Fallback to finding the action view by item id from the toolbar
+                    menuItemView = binding.topAppBar.findViewById(R.id.action_profile);
                 }
-                return true;
-            } else if (itemId == R.id.action_student_management) {
-                if (navController != null) {
-                    // Navigate to student management fragment
-                    navController.navigate(R.id.studentManagementFragment);
-                }
-                return true;
-            } else if (itemId == R.id.action_theme_toggle) {
-                toggleThemeMode();
-                return true;
-            } else if (itemId == R.id.action_logout) {
-                authViewModel.logout();
+                showProfileDropdown(menuItemView);
                 return true;
             }
             return false;
         });
-        binding.topAppBar.post(this::refreshThemeMenuItem);
+    }
+
+    private void showProfileDropdown(View anchor) {
+        if (anchor == null) return;
+
+        LayoutProfileDropdownBinding dropdownBinding = LayoutProfileDropdownBinding.inflate(getLayoutInflater());
+        
+        // Setup user info if available
+        if (currentUser != null) {
+            dropdownBinding.tvProfileName.setText(currentUser.getName());
+            dropdownBinding.tvProfileRole.setText(currentUser.getRole());
+        }
+
+        // Setup theme toggle state
+        updateThemeUI(dropdownBinding.ivThemeIcon, dropdownBinding.tvThemeText);
+
+        float density = getResources().getDisplayMetrics().density;
+        int widthInPx = (int) (220 * density);
+        int marginInPx = (int) (16 * density);
+
+        PopupWindow popupWindow = new PopupWindow(
+                dropdownBinding.getRoot(),
+                widthInPx,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                true
+        );
+
+        // Styling the popup - background is required for shadows and dismissal behavior
+        popupWindow.setBackgroundDrawable(new android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT));
+        popupWindow.setElevation(24);
+        
+        // Click listeners
+        dropdownBinding.itemAccountSettings.setOnClickListener(v -> {
+            if (navController != null) navController.navigate(R.id.accountSettingsFragment);
+            popupWindow.dismiss();
+        });
+
+        dropdownBinding.itemUserManagement.setOnClickListener(v -> {
+            if (navController != null) navController.navigate(R.id.userManagementFragment);
+            popupWindow.dismiss();
+        });
+
+        dropdownBinding.itemStudentManagement.setOnClickListener(v -> {
+            if (navController != null) navController.navigate(R.id.studentManagementFragment);
+            popupWindow.dismiss();
+        });
+
+        dropdownBinding.itemThemeToggle.setOnClickListener(v -> {
+            toggleThemeMode();
+            // Optional: Dismiss or update UI. For system-wide theme change, activity usually recreates.
+            popupWindow.dismiss();
+        });
+
+        dropdownBinding.itemLogout.setOnClickListener(v -> {
+            authViewModel.logout();
+            popupWindow.dismiss();
+        });
+
+        // Show as dropdown with offsets to align near the right edge of the screen
+        popupWindow.showAsDropDown(anchor, -(widthInPx - anchor.getWidth()) - marginInPx, 12);
+    }
+
+    private void updateThemeUI(android.widget.ImageView icon, android.widget.TextView text) {
+        int savedMode = sessionManager.getThemeMode();
+        boolean isDarkMode;
+        if (savedMode == AppCompatDelegate.MODE_NIGHT_YES) {
+            isDarkMode = true;
+        } else if (savedMode == AppCompatDelegate.MODE_NIGHT_NO) {
+            isDarkMode = false;
+        } else {
+            int currentUiMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+            isDarkMode = currentUiMode == Configuration.UI_MODE_NIGHT_YES;
+        }
+
+        if (text != null) {
+            text.setText(isDarkMode ? R.string.theme_switch_to_light : R.string.theme_switch_to_dark);
+        }
+        if (icon != null) {
+            icon.setImageDrawable(ContextCompat.getDrawable(this, isDarkMode ? R.drawable.ic_sun : R.drawable.ic_moon));
+        }
     }
 
     @Override
@@ -148,6 +221,11 @@ public class MainActivity extends AppCompatActivity {
                 authViewModel.clearLogoutResult();
             }
         });
+
+        // Observe current user for profile header
+        userRepository.getUser().observe(this, user -> {
+            this.currentUser = user;
+        });
     }
 
     private void applySavedThemeMode() {
@@ -171,29 +249,5 @@ public class MainActivity extends AppCompatActivity {
 
         sessionManager.setThemeMode(nextMode);
         AppCompatDelegate.setDefaultNightMode(nextMode);
-        refreshThemeMenuItem();
-    }
-
-    private void updateThemeMenuItem(MenuItem themeItem) {
-        if (themeItem == null) {
-            return;
-        }
-
-        int savedMode = sessionManager.getThemeMode();
-        boolean isDarkMode;
-        if (savedMode == AppCompatDelegate.MODE_NIGHT_YES) {
-            isDarkMode = true;
-        } else if (savedMode == AppCompatDelegate.MODE_NIGHT_NO) {
-            isDarkMode = false;
-        } else {
-            int currentUiMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
-            isDarkMode = currentUiMode == Configuration.UI_MODE_NIGHT_YES;
-        }
-        themeItem.setTitle(isDarkMode ? R.string.theme_switch_to_light : R.string.theme_switch_to_dark);
-        themeItem.setIcon(ContextCompat.getDrawable(this, isDarkMode ? R.drawable.ic_sun : R.drawable.ic_moon));
-    }
-
-    private void refreshThemeMenuItem() {
-        updateThemeMenuItem(binding.topAppBar.getMenu().findItem(R.id.action_theme_toggle));
     }
 }

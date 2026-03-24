@@ -4,6 +4,7 @@ import com.example.borrowhub.data.local.SessionManager;
 import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import com.example.borrowhub.BuildConfig;
@@ -19,21 +20,26 @@ public class ApiClient {
 
     private ApiClient(SessionManager sessionManager) {
         this.sessionManager = sessionManager;
+
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(message -> android.util.Log.d("OkHttp", message));
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .addInterceptor(loggingInterceptor)
                 .addInterceptor(chain -> {
                     Request originalRequest = chain.request();
                     String authToken = this.sessionManager.getAuthToken();
 
-                    if (authToken == null || authToken.trim().isEmpty()) {
-                        return chain.proceed(originalRequest);
+                    Request.Builder builder = originalRequest.newBuilder()
+                            .header("Accept", "application/json");
+
+                    if (authToken != null && !authToken.trim().isEmpty()) {
+                        // Siguraduhin na isa lang ang "Bearer " prefix
+                        String bearerToken = authToken.startsWith("Bearer ") ? authToken : "Bearer " + authToken;
+                        builder.header("Authorization", bearerToken);
                     }
 
-                    String bearerToken = authToken.startsWith("Bearer ") ? authToken : "Bearer " + authToken;
-                    Request requestWithAuth = originalRequest.newBuilder()
-                            .header("Authorization", bearerToken)
-                            .build();
-
-                    return chain.proceed(requestWithAuth);
+                    return chain.proceed(builder.build());
                 })
                 .connectTimeout(30, TimeUnit.SECONDS)
                 .readTimeout(30, TimeUnit.SECONDS)

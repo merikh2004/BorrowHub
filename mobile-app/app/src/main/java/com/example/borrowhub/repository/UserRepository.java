@@ -12,9 +12,11 @@ import com.example.borrowhub.data.local.entity.User;
 import com.example.borrowhub.data.remote.ApiClient;
 import com.example.borrowhub.data.remote.api.ApiService;
 import com.example.borrowhub.data.remote.dto.ApiResponseDTO;
-import com.example.borrowhub.data.remote.dto.CreateUserRequestDTO;
+import com.example.borrowhub.data.remote.dto.ChangePasswordRequestDTO;
 import com.example.borrowhub.data.remote.dto.LoginRequestDTO;
 import com.example.borrowhub.data.remote.dto.LoginResponseDTO;
+import com.example.borrowhub.data.remote.dto.UpdateProfileRequestDTO;
+import com.example.borrowhub.data.remote.dto.CreateUserRequestDTO;
 import com.example.borrowhub.data.remote.dto.ResetPasswordRequestDTO;
 import com.example.borrowhub.data.remote.dto.UpdateUserRequestDTO;
 import com.example.borrowhub.data.remote.dto.UserDTO;
@@ -103,7 +105,7 @@ public class UserRepository {
     public LiveData<Boolean> logout() {
         MutableLiveData<Boolean> logoutResult = new MutableLiveData<>();
 
-        String token = sessionManager.getAuthToken();
+        String token = getAuthHeader();
         if (isValidToken(token)) {
             apiService.logout(token).enqueue(new Callback<Void>() {
                 @Override
@@ -147,6 +149,77 @@ public class UserRepository {
         String token = sessionManager.getAuthToken();
         return isValidToken(token);
     }
+
+    // --- Account Settings (Feature) ---
+
+    public LiveData<Boolean> updateProfile(String fullName, String username) {
+        MutableLiveData<Boolean> updateResult = new MutableLiveData<>();
+        String token = getAuthHeader();
+        if (!isValidToken(token)) {
+            updateResult.postValue(false);
+            return updateResult;
+        }
+
+        UpdateProfileRequestDTO request = new UpdateProfileRequestDTO(fullName, username);
+        apiService.updateProfile(token, request).enqueue(new Callback<ApiResponseDTO<UserDTO>>() {
+            @Override
+            public void onResponse(Call<ApiResponseDTO<UserDTO>> call, Response<ApiResponseDTO<UserDTO>> response) {
+                if (response.isSuccessful()
+                        && response.body() != null
+                        && response.body().isSuccess()
+                        && response.body().getData() != null) {
+                    UserDTO userDto = response.body().getData();
+                    executorService.execute(() -> {
+                        User user = convertDtoToEntity(userDto);
+                        userDao.insertUser(user);
+                        updateResult.postValue(true);
+                    });
+                } else {
+                    updateResult.postValue(false);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponseDTO<UserDTO>> call, Throwable t) {
+                Log.e(TAG, "Profile update failed: " + t.getMessage(), t);
+                updateResult.postValue(false);
+            }
+        });
+
+        return updateResult;
+    }
+
+    public LiveData<Boolean> changePassword(String currentPassword, String newPassword, String confirmPassword) {
+        MutableLiveData<Boolean> changePasswordResult = new MutableLiveData<>();
+        String token = getAuthHeader();
+        if (!isValidToken(token)) {
+            changePasswordResult.postValue(false);
+            return changePasswordResult;
+        }
+
+        ChangePasswordRequestDTO request = new ChangePasswordRequestDTO(
+                currentPassword, newPassword, confirmPassword
+        );
+        apiService.changePassword(token, request).enqueue(new Callback<ApiResponseDTO<Void>>() {
+            @Override
+            public void onResponse(Call<ApiResponseDTO<Void>> call, Response<ApiResponseDTO<Void>> response) {
+                boolean success = response.isSuccessful()
+                        && response.body() != null
+                        && response.body().isSuccess();
+                changePasswordResult.postValue(success);
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponseDTO<Void>> call, Throwable t) {
+                Log.e(TAG, "Change password failed: " + t.getMessage(), t);
+                changePasswordResult.postValue(false);
+            }
+        });
+
+        return changePasswordResult;
+    }
+
+    // --- User Management (Master) ---
 
     public MutableLiveData<Result<User>> createUser(String name, String username, String role, String password) {
         MutableLiveData<Result<User>> result = new MutableLiveData<>();

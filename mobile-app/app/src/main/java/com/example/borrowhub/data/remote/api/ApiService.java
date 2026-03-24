@@ -14,6 +14,8 @@ import com.example.borrowhub.data.remote.dto.StudentDTO;
 import com.example.borrowhub.data.remote.dto.CreateStudentRequestDTO;
 import com.example.borrowhub.data.remote.dto.UpdateStudentRequestDTO;
 import com.example.borrowhub.data.remote.dto.ImportStudentsRequestDTO;
+import com.example.borrowhub.data.remote.dto.UpdateProfileRequestDTO;
+import com.example.borrowhub.data.remote.dto.ChangePasswordRequestDTO;
 import com.example.borrowhub.data.remote.dto.UserDTO;
 import com.example.borrowhub.data.remote.dto.CreateUserRequestDTO;
 import com.example.borrowhub.data.remote.dto.UpdateUserRequestDTO;
@@ -64,16 +66,26 @@ public interface ApiService {
     Call<ApiResponseDTO<Void>> resetUserPassword(@Header("Authorization") String token, @Path("id") int userId, @Body ResetPasswordRequestDTO request);
 
     @GET("api/v1/dashboard/stats")
-    Call<DashboardStatsDTO> getDashboardStats(@Header("Authorization") String token);
+    Call<ApiResponseDTO<DashboardStatsDTO>> getDashboardStats(@Header("Authorization") String token);
 
     @GET("api/v1/dashboard/recent-transactions")
-    Call<List<RecentTransactionDTO>> getRecentTransactions(@Header("Authorization") String token);
+    Call<ApiResponseDTO<List<RecentTransactionDTO>>> getRecentTransactions(@Header("Authorization") String token);
 
     // Inventory - Categories
     @GET("api/v1/categories")
     Call<ApiResponseDTO<List<CategoryDTO>>> getCategories(@Header("Authorization") String token);
 
     // Inventory - Items
+    @GET("api/v1/items")
+    Call<ApiResponseDTO<List<ItemDTO>>> getItems(
+            @Header("Authorization") String token,
+            @Query("page") Integer page,
+            @Query("per_page") Integer perPage,
+            @Query("search") String search,
+            @Query("category_id") Integer categoryId,
+            @Query("status") String status
+    );
+
     @GET("api/v1/items")
     Call<ApiResponseDTO<List<ItemDTO>>> getItems(@Header("Authorization") String token);
 
@@ -123,5 +135,18 @@ public interface ApiService {
             @Query("action") String action,
             @Query("target_user_id") String targetUserId,
             @Query("performed_by") String performedBy
+    );
+
+    // Account Settings
+    @PUT("api/v1/user")
+    Call<ApiResponseDTO<UserDTO>> updateProfile(
+            @Header("Authorization") String token,
+            @Body UpdateProfileRequestDTO request
+    );
+
+    @POST("api/v1/user/change-password")
+    Call<ApiResponseDTO<Void>> changePassword(
+            @Header("Authorization") String token,
+            @Body ChangePasswordRequestDTO request
     );
 }
